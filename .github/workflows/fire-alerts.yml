@@ -1,1 +1,56 @@
+name: Fire Internship Alerts
 
+on:
+  schedule:
+    - cron: '4,14,24,34,44,54 * * * *'
+  workflow_dispatch:
+    inputs:
+      test_notification:
+        description: 'Create a test issue so you can verify email delivery'
+        type: boolean
+        default: false
+
+permissions:
+  contents: write
+  issues: write
+
+concurrency:
+  group: fire-internship-alerts
+  cancel-in-progress: false
+
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: true
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Scan Simplify's current fire-company set
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_REPOSITORY: ${{ github.repository }}
+          TEST_NOTIFICATION: ${{ inputs.test_notification }}
+        shell: bash
+        run: |
+          if [[ "$TEST_NOTIFICATION" == "true" ]]; then
+            python watch.py --test-alert
+          else
+            python watch.py
+          fi
+
+      - name: Save seen-state for next run
+        if: ${{ inputs.test_notification != true }}
+        shell: bash
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add -f data/seen.json
+          if ! git diff --cached --quiet; then
+            git commit -m 'Update seen FAANG+ internship alerts'
+            git push
+          fi
