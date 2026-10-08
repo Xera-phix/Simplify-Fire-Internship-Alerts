@@ -1,0 +1,19 @@
+{
+  "year": 2027,
+  "season": "summer",
+  "exclude_companies": ["amd"],
+  "only_companies": [],
+  "role_keywords": [
+    "software", "swe", "developer", "backend", "back-end", "frontend",
+    "front-end", "fullstack", "full-stack", "full stack", "platform",
+    "infrastructure", "devops", "site reliability", "production engineer",
+    "machine learning engineer", "ml engineer", "applied ai", "ai engineer",
+    "agent engineer", "forward deployed", "gameplay", "game engineer"
+  ],
+  "exclude_title_keywords": [
+    "hardware", "electrical", "mechanical", "fpga", "firmware",
+    "product manager", "program manager", "data analyst", "data scientist",
+    "research scientist", "phd", "ph.d", "master's", "masters", "mba"
+  ],
+  "location_keywords": []
+}
